@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: spendwise
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/master.xml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/spendwise?currentSchema=public
+    username: postgres
+    password: toor
+mybatis:
+  mapper-locations: classpath:mappers/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

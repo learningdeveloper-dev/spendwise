@@ -1,0 +1,25 @@
+services:
+  db:
+    image: bitnami/postgresql
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    volumes:
+      - pgdata:/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: toor
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: spendwise
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 5433:8080
+
+volumes:
+      pgdata:

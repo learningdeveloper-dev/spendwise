@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="users">
+    <insert id="createUser" parameterType="com.learningdeveloper.spendwise.users.dto.User">
+        <selectKey keyProperty="userId"
+                   resultType="long"
+                   order="BEFORE">
+            SELECT nextval('users_seq')
+        </selectKey>
+        INSERT INTO users
+            (USER_ID, DISPLAY_NAME, EMAIL_ID, MOBILE_NUMBER)
+        VALUES
+            (#{userId},#{displayName}, #{emailId}, #{mobileNumber})
+    </insert>
+
+    <!-- UPDATE by userId -->
+    <update id="updateUser" parameterType="com.learningdeveloper.spendwise.users.dto.User">
+        UPDATE users
+        SET
+            display_name = #{displayName},
+            email_id = #{emailId},
+            mobile_number = #{mobileNumber}
+        WHERE
+            user_id = #{userId}
+    </update>
+
+
+    <!-- DELETE by userId -->
+    <delete id="deleteUserById" parameterType="long">
+        DELETE FROM
+            users
+        WHERE
+            user_id = #{userId}
+    </delete>
+
+
+    <!-- SELECT by userId -->
+    <select id="getUserById" parameterType="long"
+            resultType="com.learningdeveloper.spendwise.users.dto.User">
+        SELECT
+            user_id AS userId,
+            display_name AS displayName,
+            email_id AS emailId,
+            mobile_number AS mobileNumber
+        FROM
+            users
+        WHERE
+            user_id = #{userId}
+    </select>
+
+
+    <!-- SELECT by mobileNumber -->
+    <select id="getUserByMobileNumber" parameterType="string"
+            resultType="com.learningdeveloper.spendwise.users.dto.User">
+        SELECT
+            user_id AS userId,
+            display_name AS displayName,
+            email_id AS emailId,
+            mobile_number AS mobileNumber
+        FROM
+            users
+        WHERE
+            mobile_number = #{mobileNumber}
+    </select>
+
+</mapper>
