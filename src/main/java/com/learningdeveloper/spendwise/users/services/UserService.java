@@ -11,5 +11,9 @@ public interface UserService {
 
     User selectUserByMobileNumber(String mobileNumber);
 
+    User selectUserByEmailId(String emailId);
+
     void deleteUser(Long id);
+
+    User selectUserByEmailIdAndPassword(String emailId, String password);
 }

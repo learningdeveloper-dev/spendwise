@@ -65,6 +65,31 @@
             mobile_number = #{mobileNumber}
     </select>
 
+    <!-- SELECT by emailId -->
+    <select id="getUserByEmailId" parameterType="string"
+            resultType="com.learningdeveloper.spendwise.users.dto.User">
+        SELECT
+            user_id AS userId,
+            display_name AS displayName,
+            email_id AS emailId,
+            mobile_number AS mobileNumber
+        FROM
+            users
+        WHERE
+            email_id = #{emailId}
+    </select>
+
+    <select id="getUserByEmailIdAndPassword" parameterType="java.util.Map"
+            resultType="Integer">
+        SELECT
+            1
+        FROM
+            users
+        WHERE
+            email_id = #{emailId}
+            and password = #{password}
+    </select>
+
     <select id="userExists" parameterType="com.learningdeveloper.spendwise.login.dto.SignupDTO"
             resultType="Integer">
         SELECT

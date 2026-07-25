@@ -9,3 +9,7 @@ mybatis:
   mapper-locations: classpath:mappers/*.xml
   configuration:
     map-underscore-to-camel-case: true
+security:
+  jwt:
+    # 1h in millisecond
+    expiration-time: 3600000

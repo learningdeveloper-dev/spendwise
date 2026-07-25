@@ -12,4 +12,8 @@ public interface UserDao {
     User selectUserByMobileNumber(String mobileNumber);
 
     void deleteUser(Long id);
+
+    User selectUserByEmailId(String emailId);
+
+    User selectUserByEmailIdAndPassword(String emailId, String password);
 }

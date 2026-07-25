@@ -18,8 +18,8 @@ public class LoginDaoImpl implements LoginDao {
 
     @Override
     public User login(SignupDTO signupDTO) {
-        Integer userExist = this.sqlSessionTemplate.selectOne("users.userExists", signupDTO);
-        if (userExist == 1) {
+        Integer userExist = this.sqlSessionTemplate.selectOne("users.getUserByEmailIdAndPassword", signupDTO);
+        if (userExist != null) {
             signupDTO.setPassword(null);
         } else {
             throw new UserDoesNotExist("Email: %s or Mobile Number: %s does not exist".formatted(signupDTO.getEmailId(), signupDTO.getMobileNumber()));

@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/login")
 public class LoginController {
 
-    private LoginService loginService;
+    private final LoginService loginService;
 
     public LoginController(LoginService loginService) {
         this.loginService = loginService;
     }
 
     @PostMapping("/v1/login")
-    public User login(@RequestBody SignupDTO signupDTO) throws Exception {
+    public String login(@RequestBody SignupDTO signupDTO) throws Exception {
         return loginService.login(signupDTO);
     }
 
-    @PostMapping("/v1/signUp")
+    @PostMapping("/v1/sign-up")
     public User signup(@RequestBody SignupDTO signupDTO) throws Exception {
         return loginService.signUp(signupDTO);
     }

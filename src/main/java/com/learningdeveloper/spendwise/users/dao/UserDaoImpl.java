@@ -5,6 +5,9 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
 public class UserDaoImpl implements UserDao {
 
@@ -34,5 +37,18 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void deleteUser(Long id) {
         this.sqlSessionTemplate.delete("users.deleteUserById", id);
+    }
+
+    @Override
+    public User selectUserByEmailId(String emailId) {
+        return this.sqlSessionTemplate.selectOne("users.getUserByEmailId", emailId);
+    }
+
+    @Override
+    public User selectUserByEmailIdAndPassword(String emailId, String password) {
+        Map<String, String> payload = new HashMap<>();
+        payload.put("emailId", emailId);
+        payload.put("password", password);
+        return this.sqlSessionTemplate.selectOne("users.getUserByEmailIdAndPassword", payload);
     }
 }
