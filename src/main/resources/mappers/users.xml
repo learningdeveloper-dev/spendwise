@@ -3,16 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="users">
-    <insert id="createUser" parameterType="com.learningdeveloper.spendwise.users.dto.User">
+    <insert id="createUser" parameterType="com.learningdeveloper.spendwise.login.dto.SignupDTO">
         <selectKey keyProperty="userId"
                    resultType="long"
                    order="BEFORE">
             SELECT nextval('users_seq')
         </selectKey>
         INSERT INTO users
-            (USER_ID, DISPLAY_NAME, EMAIL_ID, MOBILE_NUMBER)
+            (USER_ID, DISPLAY_NAME, EMAIL_ID, MOBILE_NUMBER, PASSWORD)
         VALUES
-            (#{userId},#{displayName}, #{emailId}, #{mobileNumber})
+            (#{userId}, #{displayName}, #{emailId}, #{mobileNumber}, #{password})
     </insert>
 
     <!-- UPDATE by userId -->
@@ -63,6 +63,24 @@
             users
         WHERE
             mobile_number = #{mobileNumber}
+    </select>
+
+    <select id="userExists" parameterType="com.learningdeveloper.spendwise.login.dto.SignupDTO"
+            resultType="Integer">
+        SELECT
+            1
+        FROM
+            users
+        WHERE
+            password = #{password}
+        <choose>
+            <when test="mobileNumber != null and mobileNumber != ''">
+                AND mobile_number = #{mobileNumber}
+            </when>
+            <when test="emailId != null and emailId != ''">
+                AND email_id = #{emailId}
+            </when>
+        </choose>
     </select>
 
 </mapper>
