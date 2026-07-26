@@ -18,6 +18,8 @@ public class JWTServices {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
+    private static SecretKey secretKey;
+
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -79,6 +81,10 @@ public class JWTServices {
     }
 
     private SecretKey getSignInKey() {
-        return Jwts.SIG.HS256.key().build();
+        // TODO: Have the signing key present in properties or environment variable
+        if (secretKey == null) {
+            secretKey = Jwts.SIG.HS256.key().build();
+        }
+        return secretKey;
     }
 }
