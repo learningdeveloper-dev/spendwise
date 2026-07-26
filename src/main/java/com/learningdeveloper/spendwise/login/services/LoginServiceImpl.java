@@ -28,7 +28,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public User signUp(SignupDTO signupDTO) throws Exception {
-        // Add a default role to the user
+        // TODO: Add a default role to the user
         return loginDao.signUp(signupDTO);
     }
 }
