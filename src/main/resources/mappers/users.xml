@@ -65,18 +65,27 @@
             mobile_number = #{mobileNumber}
     </select>
 
-    <!-- SELECT by emailId -->
-    <select id="getUserByEmailId" parameterType="string"
-            resultType="com.learningdeveloper.spendwise.users.dto.User">
+    <resultMap id="userResultMap" type="com.learningdeveloper.spendwise.users.dto.User">
+        <id property="userId" column="user_id"/>
+        <result property="displayName" column="display_name"/>
+        <result property="emailId" column="email_id"/>
+        <result property="mobileNumber" column="mobile_number"/>
+        <collection property="roles" ofType="string" javaType="java.util.List">
+            <result column="role_name"/>
+        </collection>
+    </resultMap>
+
+    <select id="getUserByEmailId" parameterType="string" resultMap="userResultMap">
         SELECT
-            user_id AS userId,
-            display_name AS displayName,
-            email_id AS emailId,
-            mobile_number AS mobileNumber
-        FROM
-            users
-        WHERE
-            email_id = #{emailId}
+            u.user_id       AS user_id,
+            u.display_name  AS display_name,
+            u.email_id      AS email_id,
+            u.mobile_number AS mobile_number,
+            r.role_name     AS role_name
+        FROM users u
+        LEFT JOIN USER_ROLES_MAPPING urm ON urm.user_id = u.user_id
+        LEFT JOIN ROLES r ON r.role_id = urm.role_id
+        WHERE u.email_id = #{emailId}
     </select>
 
     <select id="getUserByEmailIdAndPassword" parameterType="java.util.Map"

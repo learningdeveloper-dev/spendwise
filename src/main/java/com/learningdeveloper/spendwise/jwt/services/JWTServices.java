@@ -3,6 +3,8 @@ package com.learningdeveloper.spendwise.jwt.services;
 import com.learningdeveloper.spendwise.users.dto.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,8 @@ public class JWTServices {
     @Value("${security.jwt.expiration-time}")
     private long jwtExpiration;
 
-    private static SecretKey secretKey;
+    @Value("${security.jwt.secret}")
+    private String secret;
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -46,8 +49,6 @@ public class JWTServices {
             User user,
             long expiration
     ) {
-
-        // TODO: Add the signing key
         return Jwts
                 .builder()
                 .claims(extraClaims)
@@ -81,10 +82,9 @@ public class JWTServices {
     }
 
     private SecretKey getSignInKey() {
-        // TODO: Have the signing key present in properties or environment variable
-        if (secretKey == null) {
-            secretKey = Jwts.SIG.HS256.key().build();
+        if (secret == null) {
+            throw new IllegalStateException("JWT_SECRET environment variable is not set");
         }
-        return secretKey;
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
     }
 }

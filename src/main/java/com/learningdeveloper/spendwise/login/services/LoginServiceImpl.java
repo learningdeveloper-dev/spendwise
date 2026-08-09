@@ -1,10 +1,13 @@
 package com.learningdeveloper.spendwise.login.services;
 
+import com.learningdeveloper.spendwise.base.constants.SignUpConstants;
 import com.learningdeveloper.spendwise.jwt.services.JWTServices;
 import com.learningdeveloper.spendwise.login.dao.LoginDao;
 import com.learningdeveloper.spendwise.login.dto.SignupDTO;
 import com.learningdeveloper.spendwise.users.dto.User;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -28,7 +31,7 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public User signUp(SignupDTO signupDTO) throws Exception {
-        // TODO: Add a default role to the user
+        signupDTO.setRoles(Collections.singletonList(SignUpConstants.USER));
         return loginDao.signUp(signupDTO);
     }
 }

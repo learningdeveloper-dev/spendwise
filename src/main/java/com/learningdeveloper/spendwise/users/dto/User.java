@@ -14,5 +14,5 @@ public class User extends BaseDto {
     private String displayName;
     private String emailId;
     private String mobileNumber;
-    private List<JaasGrantedAuthority> roles;
+    private List<String> roles;
 }
