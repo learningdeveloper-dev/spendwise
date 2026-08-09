@@ -1,37 +1,45 @@
 # Spendwise
 
-## Objective
-Create a rest server to handle users, accounts, transactions, lending, borrowing and creating budget
+## What is Spendwise?
 
-## Roadmap
-- Setup postgres docker instance
-- Setup UI for postgres
-- Setup Liquibase
-- Setup myBatis
-- Create Spring profiles
-- Add validation for user operations
-- Handle Exceptions
-  - Create controller advice
-  - Create custom exceptions
-  - Logging error using Slf4j and logback.xml
-- Add CRUD for accounts
-- Add validation for accounts operations
-- Add CRUD for transactions
-- Add validation for transactions operations
-- Add CRUD for ledger
-- Add validation for ledger operations (lending + borrowing)
+Spendwise is an application to track financials for a user. Financials include accounts own by the user, accounts they own and its balance
+transactions made from those accounts, money lent and/or borrowed from another user, and having options to create custom budget
 
-## Immediate Plan
-- Create spring profiles
-- Add validation for users
-- Add Accounts
-- Handle Exceptions
-  - Create controller advice
-  - Create custom exceptions
-  - Logging error using Slf4j and logback.xml
+## TechStack
 
-## Completed
-- Successfully setup postgres using username and password
-- Successfully setup mybatis
-- Successfully setup Liquibase
-- Created CRUD for Users
+- Backend 
+  - Neon DB/PostgreSQL
+  - Spring boot
+  - Java 21
+  - MyBatis
+- Frontend
+  - React Native
+
+## Tools
+
+- Maven
+- Git
+- Docker
+
+## API Documentation
+
+```
+http://localhost:8080/swagger-ui/index.html
+```
+
+## Configuration
+
+| Property      | Description      | Default |
+|---------------|------------------|---------|
+| Server Port   | Application port | 8080    |
+| Logging level | Log verbosity    | INFO    |
+
+## Environment Variable
+
+| Variable   | Description                |
+|------------|----------------------------|
+| DB_HOST    | Database connection string |
+| DB_USER    | Database username          |
+| DB_PASS    | Database password          |
+| JWT_SECRET | JWT signing key            |
+
