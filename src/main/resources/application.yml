@@ -11,5 +11,6 @@ mybatis:
     map-underscore-to-camel-case: true
 security:
   jwt:
+    secret: ${JWT_SECRET}
     # 1h in millisecond
     expiration-time: 3600000
