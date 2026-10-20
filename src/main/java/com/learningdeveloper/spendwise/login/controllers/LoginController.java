@@ -2,7 +2,6 @@ package com.learningdeveloper.spendwise.login.controllers;
 
 import com.learningdeveloper.spendwise.login.dto.SignupDTO;
 import com.learningdeveloper.spendwise.login.services.LoginService;
-import com.learningdeveloper.spendwise.users.dto.User;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +23,7 @@ public class LoginController {
     }
 
     @PostMapping("/v1/sign-up")
-    public User signup(@RequestBody SignupDTO signupDTO) throws Exception {
+    public Integer signup(@RequestBody SignupDTO signupDTO) throws Exception {
         return loginService.signUp(signupDTO);
     }
 }

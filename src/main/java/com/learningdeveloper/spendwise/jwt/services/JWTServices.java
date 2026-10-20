@@ -52,7 +52,7 @@ public class JWTServices {
         return Jwts
                 .builder()
                 .claims(extraClaims)
-                .subject(user.getEmailId())
+                .subject(user.getUserId())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(getSignInKey())

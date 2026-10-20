@@ -1,8 +1,13 @@
 package com.learningdeveloper.spendwise.base.dto;
 
+import lombok.Data;
+
+import java.time.Instant;
+
+@Data
 public class BaseDto {
     private String createdBy;
     private String modifiedBy;
-    private String createdOn;
-    private String modifiedOn;
+    private Instant createdOn;
+    private Instant modifiedOn;
 }

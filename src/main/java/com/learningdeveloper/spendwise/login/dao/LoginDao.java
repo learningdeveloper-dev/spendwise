@@ -6,5 +6,5 @@ import com.learningdeveloper.spendwise.users.dto.User;
 public interface LoginDao {
     User login(SignupDTO signupDTO) throws Exception;
 
-    User signUp(SignupDTO signupDTO) throws Exception;
+    Integer signUp(SignupDTO signupDTO) throws Exception;
 }

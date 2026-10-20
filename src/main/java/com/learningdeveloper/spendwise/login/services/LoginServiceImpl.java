@@ -22,15 +22,12 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public String login(SignupDTO signupDTO) throws Exception {
-        if (loginDao.login(signupDTO) != null) {
-            return jwtServices.generateToken(signupDTO);
-        } else {
-            return null;
-        }
+        User user = loginDao.login(signupDTO);
+        return jwtServices.generateToken(user);
     }
 
     @Override
-    public User signUp(SignupDTO signupDTO) throws Exception {
+    public Integer signUp(SignupDTO signupDTO) throws Exception {
         signupDTO.setRoles(Collections.singletonList(SignUpConstants.USER));
         return loginDao.signUp(signupDTO);
     }

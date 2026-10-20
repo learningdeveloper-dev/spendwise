@@ -10,7 +10,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<String> handleError(Exception e) {
-        return new ResponseEntity<String>(e.getMessage(), HttpStatus.OK);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.SERVICE_UNAVAILABLE);
     }
 
 }

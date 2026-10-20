@@ -4,15 +4,28 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="users">
     <insert id="createUser" parameterType="com.learningdeveloper.spendwise.login.dto.SignupDTO">
-        <selectKey keyProperty="userId"
-                   resultType="long"
-                   order="BEFORE">
-            SELECT nextval('users_seq')
-        </selectKey>
-        INSERT INTO users
-            (USER_ID, DISPLAY_NAME, EMAIL_ID, MOBILE_NUMBER, PASSWORD)
-        VALUES
-            (#{userId}, #{displayName}, #{emailId}, #{mobileNumber}, #{password})
+        INSERT INTO users (
+            email_id,
+            password,
+            mobile_number,
+            created_at,
+            created_by,
+            modified_at,
+            modified_by,
+            display_name,
+            is_deleted
+        )
+        VALUES (
+            #{emailId},
+            #{password},
+            #{mobileNumber},
+            #{createdOn, typeHandler=org.apache.ibatis.type.InstantTypeHandler},
+            #{createdBy},
+            #{modifiedOn, typeHandler=org.apache.ibatis.type.InstantTypeHandler},
+            #{modifiedBy},
+            #{displayName},
+            'N'
+        );
     </insert>
 
     <!-- UPDATE by userId -->
@@ -21,100 +34,106 @@
         SET
             display_name = #{displayName},
             email_id = #{emailId},
-            mobile_number = #{mobileNumber}
+            mobile_number = #{mobileNumber},
+            modified_at = #{modifiedOn},
+            modified_by = #{modifiedBy}
         WHERE
             user_id = #{userId}
+            AND is_deleted = 'N'
+    </update>
+
+    <update id="updatePassword" parameterType="com.learningdeveloper.spendwise.login.dto.SignupDTO">
+        UPDATE users
+        SET
+            password = #{password},
+            modified_at = #{modifiedOn},
+            modified_by = #{modifiedBy}
+        WHERE
+            user_id = #{userId}
+            AND is_deleted = 'N'
     </update>
 
 
+
     <!-- DELETE by userId -->
-    <delete id="deleteUserById" parameterType="long">
-        DELETE FROM
-            users
+    <!-- TODO: Check if deleting email_id and mobile_number can have legal impact  -->
+    <delete id="deleteUserById" parameterType="java.lang.String">
+        UPDATE users
+        SET
+            is_deleted = 'Y'
+            display_name = 'deleted_user',
+            email_id = null,
+            mobile_number = null,
+            modified_at = #{modifiedOn},
+            modified_by = #{modifiedBy}
         WHERE
             user_id = #{userId}
     </delete>
 
 
-    <!-- SELECT by userId -->
-    <select id="getUserById" parameterType="long"
-            resultType="com.learningdeveloper.spendwise.users.dto.User">
+    <!-- JWT Verification -->
+    <select id="doesUserExistsByUserId" parameterType="long"
+            resultType="java.lang.Long">
         SELECT
-            user_id AS userId,
-            display_name AS displayName,
-            email_id AS emailId,
-            mobile_number AS mobileNumber
+            1
         FROM
             users
         WHERE
             user_id = #{userId}
+            AND is_deleted = 'N'
     </select>
 
 
-    <!-- SELECT by mobileNumber -->
-    <select id="getUserByMobileNumber" parameterType="string"
+    <!-- Profile   -->
+    <select id="getUserByUserId" parameterType="long"
             resultType="com.learningdeveloper.spendwise.users.dto.User">
         SELECT
             user_id AS userId,
-            display_name AS displayName,
-            email_id AS emailId,
-            mobile_number AS mobileNumber
+            email_id as emailId,
+            mobile_number as mobileNumber,
+            display_name as displayName
         FROM
             users
         WHERE
-            mobile_number = #{mobileNumber}
+            user_id = #{userId}
+            AND is_deleted = 'N'
     </select>
 
-    <resultMap id="userResultMap" type="com.learningdeveloper.spendwise.users.dto.User">
-        <id property="userId" column="user_id"/>
-        <result property="displayName" column="display_name"/>
-        <result property="emailId" column="email_id"/>
-        <result property="mobileNumber" column="mobile_number"/>
-        <collection property="roles" ofType="string" javaType="java.util.List">
-            <result column="role_name"/>
-        </collection>
-    </resultMap>
 
-    <select id="getUserByEmailId" parameterType="string" resultMap="userResultMap">
+    <!-- Login -->
+    <select id="doesUserExistsByMobileNumberOrEmailId" parameterType="com.learningdeveloper.spendwise.login.dto.SignupDTO"
+            resultType="com.learningdeveloper.spendwise.users.dto.User">
         SELECT
-            u.user_id       AS user_id,
-            u.display_name  AS display_name,
-            u.email_id      AS email_id,
-            u.mobile_number AS mobile_number,
-            r.role_name     AS role_name
-        FROM users u
-        LEFT JOIN USER_ROLES_MAPPING urm ON urm.user_id = u.user_id
-        LEFT JOIN ROLES r ON r.role_id = urm.role_id
-        WHERE u.email_id = #{emailId}
-    </select>
-
-    <select id="getUserByEmailIdAndPassword" parameterType="java.util.Map"
-            resultType="Integer">
-        SELECT
-            1
+            user_id AS userId,
+            display_name AS displayName
         FROM
             users
         WHERE
-            email_id = #{emailId}
+            (
+                mobile_number = #{mobileNumber}
+                or
+                email_id = #{emailId}
+                or
+                display_name = #{displayName}
+            )
             and password = #{password}
+            and is_deleted = 'N'
     </select>
 
-    <select id="userExists" parameterType="com.learningdeveloper.spendwise.login.dto.SignupDTO"
-            resultType="Integer">
+    <!-- Find receiver for transaction   -->
+    <select id="getUserIdByEmailIdOrMobileNumberOrDisplayName" parameterType="string" resultType="com.learningdeveloper.spendwise.users.dto.User">
         SELECT
-            1
+            user_id as userId,
+            display_name as displayName
         FROM
             users
         WHERE
-            password = #{password}
-        <choose>
-            <when test="mobileNumber != null and mobileNumber != ''">
-                AND mobile_number = #{mobileNumber}
-            </when>
-            <when test="emailId != null and emailId != ''">
-                AND email_id = #{emailId}
-            </when>
-        </choose>
+            is_deleted = 'N'
+            AND (
+                email_id = #{emailId}
+                OR mobile_number = #{mobileNumber}
+                OR display_name = #{displayName}
+            )
     </select>
 
 </mapper>

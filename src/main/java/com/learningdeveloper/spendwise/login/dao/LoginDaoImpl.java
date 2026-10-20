@@ -1,5 +1,6 @@
 package com.learningdeveloper.spendwise.login.dao;
 
+import com.learningdeveloper.spendwise.base.utils.CommonUtil;
 import com.learningdeveloper.spendwise.base.exceptions.UserCreationException;
 import com.learningdeveloper.spendwise.base.exceptions.UserDoesNotExist;
 import com.learningdeveloper.spendwise.login.dto.SignupDTO;
@@ -18,23 +19,21 @@ public class LoginDaoImpl implements LoginDao {
 
     @Override
     public User login(SignupDTO signupDTO) {
-        Integer userExist = this.sqlSessionTemplate.selectOne("users.getUserByEmailIdAndPassword", signupDTO);
-        if (userExist != null) {
-            signupDTO.setPassword(null);
-        } else {
-            throw new UserDoesNotExist("Email: %s or Mobile Number: %s does not exist".formatted(signupDTO.getEmailId(), signupDTO.getMobileNumber()));
+        User user = this.sqlSessionTemplate.selectOne("users.doesUserExistsByMobileNumberOrEmailId", signupDTO);
+        if (user == null) {
+            throw new UserDoesNotExist("Please recheck the username and password.");
         }
-        return signupDTO;
+        return user;
     }
 
     @Override
-    public User signUp(SignupDTO signupDTO) {
+    public Integer signUp(SignupDTO signupDTO) {
+        CommonUtil.setCreationAudit(signupDTO, signupDTO.getUserId());
         int success = this.sqlSessionTemplate.insert("users.createUser", signupDTO);
-        signupDTO.setPassword(null);
         if (success != 1) {
             throw new UserCreationException("Error creating user : %s".formatted(signupDTO));
         }
-        return signupDTO;
+        return success;
     }
 
 }
