@@ -53,8 +53,6 @@
             AND is_deleted = 'N'
     </update>
 
-
-
     <!-- DELETE by userId -->
     <!-- TODO: Check if deleting email_id and mobile_number can have legal impact  -->
     <delete id="deleteUserById" parameterType="java.lang.String">
@@ -70,7 +68,6 @@
             user_id = #{userId}
     </delete>
 
-
     <!-- JWT Verification -->
     <select id="doesUserExistsByUserId" parameterType="long"
             resultType="java.lang.Long">
@@ -82,7 +79,6 @@
             user_id = #{userId}
             AND is_deleted = 'N'
     </select>
-
 
     <!-- Profile   -->
     <select id="getUserByUserId" parameterType="long"
@@ -98,7 +94,6 @@
             user_id = #{userId}
             AND is_deleted = 'N'
     </select>
-
 
     <!-- Login -->
     <select id="doesUserExistsByMobileNumberOrEmailId" parameterType="com.learningdeveloper.spendwise.login.dto.SignupDTO"
