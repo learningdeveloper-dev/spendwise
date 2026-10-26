@@ -9,15 +9,15 @@ public class BaseDao {
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
 
-    public Object insert(String statement, Object parameter) {
+    public int insert(String statement, Object parameter) {
         return this.sqlSessionTemplate.insert(statement, parameter);
     }
 
-    public Object delete(String statement, Object parameter) {
+    public int delete(String statement, Object parameter) {
         return this.sqlSessionTemplate.delete(statement, parameter);
     }
 
-    public Object update(String statement, Object parameter) {
+    public int update(String statement, Object parameter) {
         return this.sqlSessionTemplate.update(statement, parameter);
     }
 
