@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/login")
 public class LoginController {
@@ -18,7 +20,7 @@ public class LoginController {
     }
 
     @PostMapping("/v1/login")
-    public String login(@RequestBody SignupDTO signupDTO) throws Exception {
+    public Map<String, String> login(@RequestBody SignupDTO signupDTO) throws Exception {
         return loginService.login(signupDTO);
     }
 
