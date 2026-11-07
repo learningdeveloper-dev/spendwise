@@ -27,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping(path = "v1/select-user-by-id")
-    public ResponseEntity<User> selectUserById(@RequestParam("user-id") Long id) {
+    public ResponseEntity<User> selectUserById(@RequestParam("user-id") String id) {
         User user = userService.selectUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @DeleteMapping(path = "v1/delete-user")
-    public void deleteUser(@RequestParam("user-id") Long id) {
+    public void deleteUser(@RequestParam("user-id") String id) {
         userService.deleteUser(id);
     }
 

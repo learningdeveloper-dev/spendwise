@@ -28,7 +28,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User selectUserById(Long id) {
+    public User selectUserById(String id) {
         return (User) baseDao.selectOne("users.getUserById", id);
     }
 
@@ -38,7 +38,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void deleteUser(Long id) {
+    public void deleteUser(String id) {
         baseDao.delete("users.deleteUserById", id);
     }
 

@@ -7,11 +7,11 @@ public interface UserDao {
 
     void updateUser(User user);
 
-    User selectUserById(Long id);
+    User selectUserById(String id);
 
     User selectUserByMobileNumber(String mobileNumber);
 
-    void deleteUser(Long id);
+    void deleteUser(String id);
 
     User selectUserByEmailId(String emailId);
 

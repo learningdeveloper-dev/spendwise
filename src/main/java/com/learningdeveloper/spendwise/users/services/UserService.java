@@ -7,13 +7,13 @@ public interface UserService {
 
     void updateUser(User user);
 
-    User selectUserById(Long id);
+    User selectUserById(String id);
 
     User selectUserByMobileNumber(String mobileNumber);
 
     User selectUserByEmailId(String emailId);
 
-    void deleteUser(Long id);
+    void deleteUser(String id);
 
     User selectUserByEmailIdAndPassword(String emailId, String password);
 }
