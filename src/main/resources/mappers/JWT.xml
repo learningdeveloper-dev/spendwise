@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jwt">
+    <insert id="insertRefreshToken" parameterMap="java.util.Map">
+        INSERT INTO refresh_tokens (user_id, refresh_token, previous_refresh_token)
+        VALUES (#{userId}, #{refresh_token}, null)
+    </insert>
+
+    <update id="updateRefreshToken" parameterMap="java.util.Map">
+        MERGE INTO refresh_tokens AS t
+        USING (SELECT #{userId} AS userId, #{refreshToken} AS refresh_token) AS s
+            ON t.userId = s.userId
+        WHEN MATCHED THEN
+            UPDATE SET refresh_token = s.refresh_token
+        WHEN NOT MATCHED THEN
+            INSERT (userId, refresh_token, previous_refresh_token)
+            VALUES (s.userId, s.refresh_token, null)
+    </update>
+
+    <select id="fetchRefreshToken" parameterMap="java.util.Map" resultType="java.lang.Integer">
+        SELECT
+            1
+        FROM
+            refresh_tokens
+        WHERE
+            userId = #{userId}
+            AND refresh_token = #{refreshToken}
+    </select>
+</mapper>

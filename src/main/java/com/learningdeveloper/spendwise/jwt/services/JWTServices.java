@@ -1,6 +1,9 @@
 package com.learningdeveloper.spendwise.jwt.services;
 
+import com.learningdeveloper.spendwise.base.exceptions.InvalidToken;
+import com.learningdeveloper.spendwise.jwt.dao.JwtDao;
 import com.learningdeveloper.spendwise.users.dto.User;
+import com.learningdeveloper.spendwise.users.services.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -23,7 +26,15 @@ public class JWTServices {
     @Value("${security.jwt.secret}")
     private String secret;
 
-    public String extractEmail(String token) {
+    private UserService userService;
+    private JwtDao jwtDao;
+
+    public JWTServices(UserService userService, JwtDao jwtDao) {
+        this.userService = userService;
+        this.jwtDao = jwtDao;
+    }
+
+    public String extractUserId(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -59,9 +70,13 @@ public class JWTServices {
                 .compact();
     }
 
-    public boolean isTokenValid(String token, User user) {
-        final String username = extractEmail(token);
-        return (username.equals(user.getEmailId())) && !isTokenExpired(token);
+    public boolean isTokenValid(String token, String userId) {
+        return isTokenWithOwner(token, userId) && !isTokenExpired(token);
+    }
+
+    private boolean isTokenWithOwner(String token, String userId) {
+        final String extractUserId = extractUserId(token);
+        return (userId.equals(extractUserId));
     }
 
     private boolean isTokenExpired(String token) {
@@ -86,5 +101,24 @@ public class JWTServices {
             throw new IllegalStateException("JWT_SECRET environment variable is not set");
         }
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+    }
+
+    public Map<String, String> refreshToken(Map<String, String> payload) {
+        String userId = payload.get("userId");
+        String refreshToken = payload.get("refreshToken");
+
+        if (!isTokenWithOwner(refreshToken, userId)) {
+            throw new InvalidToken("Refresh token is not with the correct owner.");
+        }
+
+        String accessToken = generateToken(userService.selectUserById(userId));
+        String newRefreshToken = generateToken(userService.selectUserById(userId));
+        jwtDao.updateRefreshToken(userId, newRefreshToken);
+
+        Map<String, String> parameterMap = new HashMap<>();
+        parameterMap.put("refreshToken", newRefreshToken);
+        parameterMap.put("accessToken", accessToken);
+
+        return parameterMap;
     }
 }

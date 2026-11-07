@@ -38,14 +38,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         final String jwt = authHeader.substring(7);
-        final String userEmail = jwtService.extractEmail(jwt);
+        final String userId = jwtService.extractUserId(jwt);
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (userEmail != null && authentication == null) {
-            User user = this.userService.selectUserByEmailId(userEmail);
+        if (userId != null && authentication == null) {
+            User user = this.userService.selectUserById(userId);
 
-            if (jwtService.isTokenValid(jwt, user)) {
+            if (jwtService.isTokenValid(jwt, user.getUserId())) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         user,
                         null,
